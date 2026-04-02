@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'IronVault Starter',
-  description: 'Starter codebase for the IronVault student crypto wallet MVP',
+  title: 'IronVault',
+  description: 'IronVault crypto wallet',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

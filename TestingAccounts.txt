@@ -1,0 +1,4 @@
+TestAccount1:
+ - Username: Bob
+ - Email: test@email.com
+ - Password: 12345678
