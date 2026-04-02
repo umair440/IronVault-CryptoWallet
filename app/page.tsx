@@ -12,7 +12,7 @@ export default function HomePage() {
       </div>
       <div className="flex gap-4">
         <Button href="/dashboard">Open dashboard</Button>
-        <Button href="/register" className="bg-slate-100 text-slate-950 hover:bg-white">Create demo account</Button>
+        <Button href="/register" className="bg-slate-100 text-slate-950 hover:bg-white">Create account</Button>
       </div>
     </main>
   );

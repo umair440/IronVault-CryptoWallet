@@ -1,10 +1,12 @@
+import type { Route } from 'next';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
 type ButtonProps = {
   children: ReactNode;
-  href?: string;
+  // Typed routes catch invalid internal links at build time.
+  href?: Route;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
 };

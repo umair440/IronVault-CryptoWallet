@@ -1,3 +1,4 @@
+import type { Route } from 'next';
 import Link from 'next/link';
 import { Wallet, ArrowUpRight, ArrowDownLeft, History, Settings, Shield } from 'lucide-react';
 
@@ -8,7 +9,8 @@ const items = [
   { href: '/transactions', label: 'History', icon: History },
   { href: '/settings', label: 'Settings', icon: Settings },
   { href: '/admin', label: 'Admin', icon: Shield },
-];
+  // `satisfies` keeps the literal route strings while still enforcing typed-route safety.
+] satisfies Array<{ href: Route; label: string; icon: typeof Wallet }>;
 
 export function Sidebar() {
   return (
