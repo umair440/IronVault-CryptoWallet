@@ -1,6 +1,6 @@
 import type { Route } from 'next';
 import Link from 'next/link';
-import { Wallet, ArrowUpRight, ArrowDownLeft, History, Settings, Shield } from 'lucide-react';
+import { Wallet, ArrowUpRight, ArrowDownLeft, History, Settings, Shield, House } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { requireSession, roleLabels } from '@/lib/session';
 
@@ -48,6 +48,13 @@ export async function Sidebar() {
       </nav>
       <div className="mt-6">
         <LogoutButton />
+        <Link
+          href="/"
+          className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-slate-700 px-3 py-2 text-sm text-slate-300 transition hover:border-slate-500 hover:text-white"
+        >
+          <House className="h-4 w-4" />
+          Back to home
+        </Link>
       </div>
     </aside>
   );
