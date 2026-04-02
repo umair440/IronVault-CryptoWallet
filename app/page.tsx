@@ -5,9 +5,9 @@ export default function HomePage() {
     <main className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center gap-8 px-6 py-16">
       <div className="max-w-3xl">
         <p className="mb-3 text-sm uppercase tracking-[0.3em] text-emerald-300">IronVault</p>
-        <h1 className="text-4xl font-bold tracking-tight md:text-6xl">A safe, student-friendly crypto wallet MVP.</h1>
+        <h1 className="text-4xl font-bold tracking-tight md:text-6xl">A beginner friendlty crypto wallet.</h1>
         <p className="mt-6 text-lg text-slate-300">
-          This starter uses Next.js, TypeScript, Prisma, MongoDB, and a mock wallet service so your team can build the core flows first: register, create wallet, portfolio, send, receive, and transaction history.
+          Crypto with confidence. IronVault is a secure and user-friendly crypto wallet designed for beginners. Manage your assets, track transactions, and explore the world of crypto with ease.
         </p>
       </div>
       <div className="flex gap-4">
