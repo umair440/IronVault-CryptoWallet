@@ -8,8 +8,10 @@ datasource db {
 }
 
 enum UserRole {
-  CUSTOMER
   ADMIN
+  DEVELOPER
+  BEGINNER_TRADER
+  GENERIC_TRADER
 }
 
 enum TransactionStatus {
@@ -26,10 +28,20 @@ model User {
   email            String        @unique
   mobileNumber     String?
   passwordHash     String
-  role             UserRole      @default(CUSTOMER)
+  role             UserRole      @default(BEGINNER_TRADER)
+  sessions         Session[]
   wallets          Wallet[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
+}
+
+model Session {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @db.ObjectId
+  createdAt  DateTime @default(now())
 }
 
 model Wallet {

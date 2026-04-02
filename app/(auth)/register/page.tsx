@@ -3,12 +3,13 @@
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 type RegisterFormData = {
   username: string;
   email: string;
   password: string;
+  role: 'ADMIN' | 'DEVELOPER' | 'BEGINNER_TRADER' | 'GENERIC_TRADER';
 };
 
 export default function RegisterPage() {
@@ -18,6 +19,7 @@ export default function RegisterPage() {
     username: '',
     email: '',
     password: '',
+    role: 'BEGINNER_TRADER',
   });
   // These flags drive the feedback text and submit button behaviour.
   const [error, setError] = useState('');
@@ -25,6 +27,25 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Lets the user temporarily reveal the password they are typing.
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function checkSession() {
+      const response = await fetch('/api/auth/session');
+      const data = (await response.json()) as { authenticated?: boolean };
+
+      if (!ignore && data.authenticated) {
+        router.replace('/dashboard');
+      }
+    }
+
+    void checkSession();
+
+    return () => {
+      ignore = true;
+    };
+  }, [router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -66,6 +87,7 @@ export default function RegisterPage() {
         username: '',
         email: '',
         password: '',
+        role: 'BEGINNER_TRADER',
       });
 
       // Give users a moment to see success feedback before moving them to login.
@@ -104,6 +126,19 @@ export default function RegisterPage() {
             autoComplete="email"
             required
           />
+          <select
+            className="rounded-xl border border-slate-700 bg-slate-950 px-2 py-2"
+            value={formData.role}
+            onChange={(event) =>
+              setFormData((current) => ({
+                ...current,
+                role: event.target.value as RegisterFormData['role'],
+              }))
+            }
+          >
+            <option value="BEGINNER_TRADER">Beginner trader</option>
+            <option value="GENERIC_TRADER">Experienced trader</option>
+          </select>
           {/* The password input is wrapped so the visibility toggle can sit inside the field. */}
           <div className="relative">
             <input

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyPassword } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createSession, getSession, roleLabels } from '@/lib/session';
 
 const schema = z.object({
   identifier: z.string().trim().min(1, 'Enter your username or email.'),
@@ -9,6 +10,15 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
+  const existingSession = await getSession();
+
+  if (existingSession) {
+    return NextResponse.json(
+      { error: `You are already logged in as ${existingSession.user.username}. Please log out first.` },
+      { status: 409 },
+    );
+  }
+
   const body = await request.json();
   const parsed = schema.safeParse(body);
 
@@ -36,7 +46,7 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'No account found with those details.' }, { status: 401 });
+      return NextResponse.json({ error: 'Email or password not recognised.' }, { status: 401 });
     }
 
     const isPasswordValid = await verifyPassword(password, user.passwordHash);
@@ -44,6 +54,8 @@ export async function POST(request: Request) {
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 });
     }
+
+    await createSession(user.id);
 
     return NextResponse.json(
       {
@@ -53,6 +65,7 @@ export async function POST(request: Request) {
           username: user.username,
           email: user.email,
           role: user.role,
+          roleLabel: roleLabels[user.role],
         },
       },
       { status: 200 },

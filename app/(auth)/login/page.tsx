@@ -3,7 +3,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 type LoginFormData = {
   identifier: string;
@@ -22,6 +22,25 @@ export default function LoginPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function checkSession() {
+      const response = await fetch('/api/auth/session');
+      const data = (await response.json()) as { authenticated?: boolean };
+
+      if (!ignore && data.authenticated) {
+        router.replace('/dashboard');
+      }
+    }
+
+    void checkSession();
+
+    return () => {
+      ignore = true;
+    };
+  }, [router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -57,7 +76,7 @@ export default function LoginPage() {
 
       setSuccessMessage(data.message ?? 'Login successful.');
 
-      // This app does not have sessions yet, so redirect after a successful credential check.
+      // The API route creates the session cookie, so the user can be redirected into the app.
       window.setTimeout(() => {
         router.push('/dashboard');
       }, 1000);

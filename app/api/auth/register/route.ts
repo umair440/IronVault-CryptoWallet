@@ -9,6 +9,7 @@ const schema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(8),
   mobileNumber: z.string().trim().optional(),
+  role: z.enum(['ADMIN', 'DEVELOPER', 'BEGINNER_TRADER', 'GENERIC_TRADER']).default('BEGINNER_TRADER'),
 });
 
 export async function POST(request: Request) {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { username, email, password, mobileNumber } = parsed.data;
+  const { username, email, password, mobileNumber, role } = parsed.data;
   // Store emails in a normalized format so duplicate checks stay reliable.
   const normalizedEmail = email.toLowerCase();
   const normalizedMobileNumber = mobileNumber || undefined;
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
         email: normalizedEmail,
         mobileNumber: normalizedMobileNumber,
         passwordHash,
+        role,
       },
       select: {
         id: true,

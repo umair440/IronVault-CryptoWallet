@@ -3,19 +3,44 @@ import { AssetTable } from '@/components/wallet/asset-table';
 import { SummaryCards } from '@/components/wallet/summary-cards';
 import { TransactionList } from '@/components/wallet/transaction-list';
 import { assetBalances, transactions } from '@/lib/mock-data';
+import { requireSession, roleLabels } from '@/lib/session';
 
-export default function DashboardPage() {
+const dashboardCopy = {
+  ADMIN: {
+    badge: 'Admin access',
+    description: 'Monitor platform activity, review operational alerts, and keep an eye on wallet usage across the prototype.',
+  },
+  DEVELOPER: {
+    badge: 'Developer tools',
+    description: 'Use the wallet views for regular testing, then jump into admin diagnostics to inspect prototype behaviour.',
+  },
+  BEGINNER_TRADER: {
+    badge: 'Guided onboarding',
+    description: 'Start here for a simpler overview of your portfolio and recent activity while you learn the core wallet flow.',
+  },
+  GENERIC_TRADER: {
+    badge: 'Core MVP',
+    description: 'Use this as the starting point for portfolio value, supported assets, and transaction monitoring.',
+  },
+} as const;
+
+export default async function DashboardPage() {
+  const session = await requireSession();
   const totalValue = assetBalances.reduce((sum, asset) => sum + asset.balance * asset.price, 0);
   const pendingTransactions = transactions.filter((tx) => tx.status === 'pending').length;
+  const currentRoleCopy = dashboardCopy[session.user.role];
 
   return (
     <main className="mx-auto grid min-h-screen max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[256px_1fr]">
       <Sidebar />
       <section className="space-y-6">
         <div>
-          <span className="badge">Core MVP</span>
+          <span className="badge">{currentRoleCopy.badge}</span>
           <h1 className="mt-3 text-3xl font-bold">Portfolio dashboard</h1>
-          <p className="mt-2 text-slate-400">Use this as the starting point for portfolio value, supported assets, and transaction monitoring.</p>
+          <p className="mt-2 text-slate-400">{currentRoleCopy.description}</p>
+          <p className="mt-3 text-sm text-slate-500">
+            Logged in as {session.user.username} ({roleLabels[session.user.role]}).
+          </p>
         </div>
         <SummaryCards totalValue={totalValue} totalAssets={assetBalances.length} pendingTransactions={pendingTransactions} />
         <AssetTable assets={assetBalances} />
