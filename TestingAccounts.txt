@@ -3,6 +3,11 @@ TestAccount1:
  - Email: test@email.com
  - Password: 12345678
 
+ TestAccount1 Wallets:
+ - MyFirstWallet password is uB9Q%DHouPLyI6NA3!
+ - AnotherWallet password is uB9Q%DHouPLyI6NA3!
+   - orbit amber wallet amber secure future network ledger amber secure ledger orbit
+
 
 ImExperienced
 cryptouser@gmail.com

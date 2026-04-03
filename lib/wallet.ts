@@ -24,6 +24,10 @@ export function encryptSecret(secret: string, password: string) {
   };
 }
 
+export function generateDemoEvmAddress() {
+  return `0x${crypto.randomBytes(20).toString('hex')}`;
+}
+
 export function validateEvmAddress(address: string) {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
