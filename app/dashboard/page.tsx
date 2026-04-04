@@ -3,7 +3,7 @@ import { WalletSummary } from '@/components/wallet/wallet-summary';
 import { AssetTable } from '@/components/wallet/asset-table';
 import { SummaryCards } from '@/components/wallet/summary-cards';
 import { TransactionList } from '@/components/wallet/transaction-list';
-import { assetBalances, transactions } from '@/lib/mock-data';
+import { assetBalances, portfolio, transactions } from '@/lib/mock-data';
 import { prisma } from '@/lib/prisma';
 import { requireSession, roleLabels } from '@/lib/session';
 
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
       createdAt: 'asc',
     },
   });
-  const totalValue = assetBalances.reduce((sum, asset) => sum + asset.balance * asset.price, 0);
+  const totalValue = portfolio.totalValue;
   const pendingTransactions = transactions.filter((tx) => tx.status === 'pending').length;
   const currentRoleCopy = dashboardCopy[session.user.role];
 

@@ -1,16 +1,73 @@
-import { AssetBalance, TransactionRecord } from '@/types';
+import { Asset, AssetBalance, BlockchainNetwork, Holding, Portfolio, TransactionRecord } from '@/types';
 
-export const supportedNetworks = [
-  { name: 'Ethereum Sepolia', chainId: '11155111', symbol: 'ETH' },
-  { name: 'Polygon Amoy', chainId: '80002', symbol: 'MATIC' },
-  { name: 'Base Sepolia', chainId: '84532', symbol: 'ETH' },
-] as const;
-
-export const assetBalances: AssetBalance[] = [
-  { symbol: 'ETH', name: 'Ethereum', balance: 1.24, price: 2520.12, network: 'Ethereum Sepolia' },
-  { symbol: 'MATIC', name: 'Polygon', balance: 240, price: 0.73, network: 'Polygon Amoy' },
-  { symbol: 'USDC', name: 'USD Coin', balance: 640, price: 1, network: 'Base Sepolia' },
+export const supportedNetworks: BlockchainNetwork[] = [
+  {
+    networkId: 'eth-sepolia',
+    name: 'Ethereum Sepolia',
+    chainId: '11155111',
+    symbol: 'ETH',
+    rpcEndpoint: 'https://sepolia.infura.io/v3/demo',
+  },
+  {
+    networkId: 'polygon-amoy',
+    name: 'Polygon Amoy',
+    chainId: '80002',
+    symbol: 'MATIC',
+    rpcEndpoint: 'https://rpc-amoy.polygon.technology',
+  },
+  {
+    networkId: 'base-sepolia',
+    name: 'Base Sepolia',
+    chainId: '84532',
+    symbol: 'ETH',
+    rpcEndpoint: 'https://sepolia.base.org',
+  },
 ];
+
+export const assets: Asset[] = [
+  { assetId: 'asset-eth', symbol: 'ETH', name: 'Ethereum', currentPrice: 2520.12 },
+  { assetId: 'asset-matic', symbol: 'MATIC', name: 'Polygon', currentPrice: 0.73 },
+  { assetId: 'asset-usdc', symbol: 'USDC', name: 'USD Coin', currentPrice: 1 },
+];
+
+export const holdings: Holding[] = [
+  {
+    holdingId: 'holding-eth',
+    asset: assets[0],
+    quantity: 1.24,
+    averageBuyPrice: 2280,
+    network: 'Ethereum Sepolia',
+  },
+  {
+    holdingId: 'holding-matic',
+    asset: assets[1],
+    quantity: 240,
+    averageBuyPrice: 0.64,
+    network: 'Polygon Amoy',
+  },
+  {
+    holdingId: 'holding-usdc',
+    asset: assets[2],
+    quantity: 640,
+    averageBuyPrice: 1,
+    network: 'Base Sepolia',
+  },
+];
+
+export const portfolio: Portfolio = {
+  portfolioId: 'portfolio-demo',
+  holdings,
+  totalValue: holdings.reduce((sum, holding) => sum + holding.quantity * holding.asset.currentPrice, 0),
+};
+
+export const assetBalances: AssetBalance[] = holdings.map((holding) => ({
+  assetId: holding.asset.assetId,
+  symbol: holding.asset.symbol,
+  name: holding.asset.name,
+  balance: holding.quantity,
+  price: holding.asset.currentPrice,
+  network: holding.network,
+}));
 
 export const transactions: TransactionRecord[] = [
   {

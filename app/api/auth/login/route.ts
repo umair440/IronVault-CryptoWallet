@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyPassword } from '@/lib/auth';
+import { PasswordAuthentication } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { createSession, getSession, roleLabels } from '@/lib/session';
 
@@ -10,6 +10,7 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
+  const passwordAuthentication = new PasswordAuthentication();
   const existingSession = await getSession();
 
   if (existingSession) {
@@ -49,7 +50,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email or password not recognised.' }, { status: 401 });
     }
 
-    const isPasswordValid = await verifyPassword(password, user.passwordHash);
+    const isPasswordValid = await passwordAuthentication.authenticate({
+      password,
+      passwordHash: user.passwordHash,
+    });
 
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 });

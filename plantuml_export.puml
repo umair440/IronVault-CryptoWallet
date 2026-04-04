@@ -1,0 +1,234 @@
+@startuml
++class SupportMessage {
+	- messageId: String
+	- content: String
+	- sentAt  Date
+}
++class SupportTicket {
+	- ticketId: String
+	- subject: String
+	- description: String
+	- status  TicketStatus
+	- createdAt  Date
+	+createTicket(): void
+	+closeTicket(): void
+	+addMessage(message): void
+}
++class Notification {
+	- notificationId: String
+	- message: String
+	- type: String
+	- sentAt  Date
+	+send(): void
+}
++class LessonProgress {
+	- progressId: String
+	- completionPercent: double
+	+updateProgress(): void
+}
++class Tutorial {
+	- tutorialId: String
+	- title: String
+	- difficulty: String
+	+startLesson(): void
+	+completeLesson(): void
+}
++class RiskWarning {
+	- warningId: String
+	- message: String
+	- riskLevel: String
+	+displayWarning(): void
+}
++class Advisor {
+	+generatePortfolioOverview(): String
+	+answerUserQuestion(question): String
+	+detectSpendingHabits(): String
+	+detectInvestmentTrends(): String
+}
++class SecurityEvent {
+	- eventId: String
+	- eventType: String
+	- severity: String
+	- timestamp  Date
+	+logEvent(): void
+}
++class TwoFactorAuthentication {
+	+sendCode : void()
+	+verifyCode(code: String): boolean
+}
++class PasswordAuthentication {
+	+authenticate(credentials): boolean
+}
++abstract class AuthenticationMethod {
+	+authenticate(credentials): boolean
+}
++class TransactionMonitor {
+	+pollPendingTransactions(): void
+	+refreshStatuses(): void
+}
++class BlockchainAPIService {
+	+fetchBalance(address): double
+	+fetchTransactionStatus(txHash): String
+	+broadcastTransaction(tx): boolean
+	+fetchMarketPrice(symbol): double
+}
++interface Observer {
+	+update(eventData): void
+}
++interface Subject {
+	+attach(observer): void
+	+detach(observer): void
+	+notifyObservers(): void
+}
++class BlockchainNetwork {
+	- networkId: String
+	- name: String
+	- chainId: String
+	- rpcEndpoint: String
+	+validateAddress(address): boolean
+	+estimateFee(): double
+	+getCongestionLevel(): String
+}
++class TransactionHistory {
+	- historyId: String
+	+viewAll(): List
+	+filterByStatus(status): List
+	+filterByDateRange(start, end): List
+}
++class ReceiveTransaction {
+	- senderAddress: String
+}
++class SendTransaction {
+	- recipientAddress: String
+	+estimateFee(): double
+}
++abstract class Transaction {
+	- transactionId: String
+	- amount: double
+	- fee: double
+	- status  TransactionStatus
+	- timestamp  Date
+	- txHash: String
+	+validate(): boolean
+	+submit(): boolean
+	+cancel(): void
+}
++class Asset {
+	- assetId: String
+	- symbol: String
+	- name: String
+	- currentPrice: double
+	+getPrice(): double
+}
++class Holding {
+	- holdingId: String
+	- quantity: double
+	- averageBuyPrice: double
+	+calculateCurrentValue(): double
+	+calculateProfitLoss(): double
+}
++class Portfolio {
+	- portfolioId: String
+	- totalValue: double
+	+calculateValue(): double
+	+viewAllocation(): Map
+	+viewPerformance(): Map
+}
++class RecoveryPhrase {
+	- phraseId: String
+	- encryptedPhrase: String
+	- generatedAt  Date
+	+displayMasked(): String
+	+verify(input): boolean
+}
++class WalletAddress {
+	- addressId: String
+	- addressValue: String
+	- label: String
+	+validate(): boolean
+}
++class Wallet {
+	- walletId: String
+	- encryptedPrivateKey: String
+	- createdAt  Date
+	- isLocked: boolean
+	+createWallet(): void
+	+importWalletFromPhrase(phrase): void
+	+importWalletByKey(privateKey): void
+	+lockWallet(): void
+	+unlockWallet(credential): void
+	+getPrimaryAddress(): String
+	+generateQRCode(): object
+	+getBalance(asset): double
+	+sendTransaction(toAddress, amount, asset): Transaction
+}
++class TraderProfile {
+	- profileId: String
+	- experienceLevel: String
+	+assignRole(role): void
+	+changeRole(role): void
+}
++class BeginnerTraderRole {
+	- hasCompletedTutorial: boolean
+	+startTutorial(): void
+	+viewLearningProgress(): double
+	+completeLesson(lessonId): void
+}
++interface TraderRole {
+	+viewPortfolio(): void
+	+viewRiskWarnings(): void
+}
++class Admin {
+	+monitorTransactions(): List
+	+viewAllLogs(): List
+	+manageSupportTickets(): void
+}
++class User {
+	- userId: String
+	- username: String
+	- email: String
+	- mobileNumber: String
+	- passwordHash: String
+	- isLocked: boolean
+	- lastActivityTime  Date
+	+register(): void
+	+login(username, password): boolean
+	+logout(): void
+	+updateAccountSettings(): void
+	+enableEmailNotifications(enabled): void
+	+autoLockOnInactivity(): void
+}
+User <|-- Admin
+BeginnerTraderRole <|.. TraderRole
+TraderProfile "1" -- "0..1" User
+Wallet "1" -- "1..*" User
+WalletAddress "1" -- "1..*" Wallet
+RecoveryPhrase "1" -- "1" Wallet
+Portfolio "1" -- "1" Wallet
+Holding "1" -- "0..*" Portfolio
+Asset "*" -- "1" Holding
+Transaction <|-- SendTransaction
+Transaction <|-- ReceiveTransaction
+Transaction "1" -- "0..*" Wallet
+TransactionHistory "1" -- "1" Wallet
+Asset "*" -- "1" Transaction
+BlockchainAPIService <|.. Subject
+TransactionMonitor <|.. Observer
+Wallet <|.. Observer
+Portfolio <|.. Observer
+BlockchainNetwork "*" -- "1" Transaction
+AuthenticationMethod <|-- PasswordAuthentication
+AuthenticationMethod <|-- TwoFactorAuthentication
+AuthenticationMethod "1" -- "1..*" User
+SecurityEvent "1" -- "0..*" User
+Tutorial "1" -- "0..*" BeginnerTraderRole
+LessonProgress "1" -- "0..*" Tutorial
+RiskWarning "1" -- "0..*" TraderProfile
+Notification "1" -- "0..*" User
+SupportTicket "1" -- "0..*" User
+SupportTicket "1" -- "0..*" Admin
+SupportMessage "1" -- "0..*" SupportTicket
+TraderProfile "1" -- "1" TraderRole
+BlockchainNetwork "1..*" -- "1" BlockchainAPIService
+Portfolio "1" -- "1" Advisor
+@enduml
