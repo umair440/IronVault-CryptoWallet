@@ -31,3 +31,9 @@ Password: uB9Q%DHouPLyI6NA3!
 Ben's Wallet:
  - 0x0db03b12b778bec683b38e5de80e52c32a228b83
  - wallet network shield amber shield token shield ledger wallet network shield cipher
+Polygon Amoy Wallet:
+ - 0xb76acdc4189a8368f31db80d769338c364d29a05
+ - wallet shield shield cipher future amber shield vault shield wallet token vault
+Base Sepolia Wallet:
+ - 0x0afb20bd36d7c633ff0291e7ec99c5e3854b771a
+ - wallet network network wallet shield future wallet amber cipher vault amber orbit
