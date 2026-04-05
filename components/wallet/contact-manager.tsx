@@ -119,7 +119,7 @@ export function ContactManager({ contacts: initialContacts }: Props) {
               <li key={contact.id} className="flex items-center justify-between gap-4 py-3">
                 <div>
                   <p className="text-sm font-medium text-white">{contact.name}</p>
-                  <p className="mt-0.5 font-mono text-xs text-slate-400">{shortenAddress(contact.address)}</p>
+                  <p className="mt-0.5 font-mono text-xs text-slate-400">{contact.address}</p>
                 </div>
                 <button
                   type="button"
