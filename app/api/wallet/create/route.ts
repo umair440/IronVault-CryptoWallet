@@ -2,29 +2,14 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
-import { encryptSecret, generateDemoEvmAddress, generateRecoveryPhrase } from '@/lib/wallet';
+import { encryptSecretBundle } from '@/lib/crypto/vault';
+import { generateDemoEvmAddress, generateRecoveryPhrase } from '@/lib/wallet';
 
 const schema = z.object({
   walletName: z.string().trim().min(2),
-  passphrase: z.string().min(8),
+  passphrase: z.string().min(14),
   network: z.enum(['Ethereum Sepolia', 'Polygon Amoy', 'Base Sepolia']),
 });
-
-// Starting balances given to every new wallet so demo users can try sending immediately.
-const STARTING_BALANCES: Record<string, { assetSymbol: string; amount: number }[]> = {
-  'Ethereum Sepolia': [
-    { assetSymbol: 'ETH', amount: 1.24 },
-    { assetSymbol: 'USDC', amount: 500 },
-  ],
-  'Polygon Amoy': [
-    { assetSymbol: 'MATIC', amount: 240 },
-    { assetSymbol: 'USDC', amount: 200 },
-  ],
-  'Base Sepolia': [
-    { assetSymbol: 'ETH', amount: 0.5 },
-    { assetSymbol: 'USDC', amount: 640 },
-  ],
-};
 
 export async function POST(request: Request) {
   const session = await getSession();
@@ -41,15 +26,36 @@ export async function POST(request: Request) {
   }
 
   const recoveryPhrase = generateRecoveryPhrase();
-  const encryptedVault = encryptSecret(recoveryPhrase, parsed.data.passphrase);
+  const encryptedPayload = await encryptSecretBundle(parsed.data.passphrase, {
+    type: 'recovery-phrase',
+    recoveryPhrase,
+  });
   const primaryAddress = generateDemoEvmAddress();
 
   const wallet = await prisma.wallet.create({
     data: {
       name: parsed.data.walletName,
       network: parsed.data.network,
-      encryptedRecoveryPhrase: JSON.stringify(encryptedVault),
       ownerId: session.user.id,
+
+      // Legacy compatibility: keep filling the existing field for now.
+      encryptedRecoveryPhrase: JSON.stringify(encryptedPayload),
+
+      // New vault structure for all new wallets.
+      vault: {
+        create: {
+          vaultVersion: 1,
+          keyVersion: encryptedPayload.keyVersion,
+          recoverySecrets: {
+            create: {
+              secretType: 'RECOVERY_PHRASE',
+              label: 'Primary recovery phrase',
+              encryptedPayload,
+            },
+          },
+        },
+      },
+
       addresses: {
         create: {
           label: 'Main',
@@ -59,19 +65,17 @@ export async function POST(request: Request) {
       },
     },
     include: {
-      addresses: { orderBy: { createdAt: 'asc' } },
+      addresses: {
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+      vault: {
+        include: {
+          recoverySecrets: true,
+        },
+      },
     },
-  });
-
-  // Create starting balances for the new wallet.
-  const seedBalances = STARTING_BALANCES[parsed.data.network] ?? [];
-  await prisma.balance.createMany({
-    data: seedBalances.map(({ assetSymbol, amount }) => ({
-      walletId: wallet.id,
-      assetSymbol,
-      network: parsed.data.network,
-      amount,
-    })),
   });
 
   return NextResponse.json({
@@ -83,7 +87,7 @@ export async function POST(request: Request) {
       createdAt: wallet.createdAt,
     },
     recoveryPhrase,
-    encryptedVault,
-    warning: 'Show the recovery phrase once, then store only ciphertext. Do not keep plaintext in your database.',
+    warning:
+        'Show the recovery phrase once only. It is not stored in plaintext on the server.',
   });
 }

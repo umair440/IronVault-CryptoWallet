@@ -69,6 +69,18 @@ model Wallet {
   createdAt                 DateTime      @default(now())
 }
 
+model Balance {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
+  walletId    String   @db.ObjectId
+  assetSymbol String
+  network     String
+  amount      Float    @default(0)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([walletId, assetSymbol, network])
+}
+
 model EncryptedWalletVault {
   id              String           @id @default(auto()) @map("_id") @db.ObjectId
   wallet          Wallet           @relation(fields: [walletId], references: [id], onDelete: Cascade)
