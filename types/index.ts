@@ -14,6 +14,7 @@ export interface WalletOption {
   name: string;
   network: SupportedNetwork;
   address: string;
+  balances: Partial<Record<'ETH' | 'MATIC' | 'USDC', number>>;
 }
 
 export interface BlockchainNetwork {

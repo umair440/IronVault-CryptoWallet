@@ -87,6 +87,52 @@ export function SendForm({ wallets, contacts }: Props) {
     }));
   }
 
+  function getSelectedWallet() {
+  return wallets.find((wallet) => wallet.id === formData.walletId);
+}
+
+function getSelectedWalletAssetBalance() {
+  const selectedWallet = getSelectedWallet();
+  if (!selectedWallet || !selectedWallet.balances) return 0;
+
+  const value = selectedWallet.balances[formData.assetSymbol as 'ETH' | 'MATIC' | 'USDC'];
+  return typeof value === 'number' ? value : 0;
+}
+
+function setQuickAmount(value: number) {
+  setFormData((prev) => ({
+    ...prev,
+    amount: value > 0 ? value.toFixed(4).replace(/\.?0+$/, '') : '',
+  }));
+}
+
+function setMaxAmount() {
+  const balance = getSelectedWalletAssetBalance();
+
+  let estimatedFee = 0;
+
+  if (formData.assetSymbol === 'ETH') {
+    estimatedFee = 0.001;
+  } else if (formData.assetSymbol === 'MATIC') {
+    estimatedFee = 0.01;
+  } else {
+    estimatedFee = 0;
+  }
+
+  const maxAmount = Math.max(balance - estimatedFee, 0);
+
+  if (maxAmount <= 0) {
+    setError('Not enough balance to cover network fees.');
+    return;
+  }
+
+  setError('');
+  setFormData((prev) => ({
+    ...prev,
+    amount: maxAmount.toFixed(4).replace(/\.?0+$/, ''),
+  }));
+}
+
   async function handleInitiate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
@@ -409,18 +455,62 @@ return (
         </label>
 
         <label className="grid gap-2 md:col-span-2">
-          <span className="text-sm text-slate-300">Amount</span>
-          <input
-            type="number"
-            step="0.0001"
-            min="0.0001"
-            className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2"
-            placeholder="0.10"
-            value={formData.amount}
-            onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
-            required
-          />
-        </label>
+  <div className="flex items-center justify-between">
+    <span className="text-sm text-slate-300">Amount</span>
+    <span className="text-xs text-slate-500">
+    Available: {getSelectedWalletAssetBalance().toFixed(4)} {formData.assetSymbol}
+    </span>
+  </div>
+
+  <input
+    type="number"
+    step="0.0001"
+    min="0.0001"
+    className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2"
+    placeholder="0.10"
+    value={formData.amount}
+    onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
+    required
+  />
+
+  <div className="flex flex-wrap gap-2">
+    <button
+      type="button"
+      onClick={() => setQuickAmount(0.1)}
+      className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+    >
+      0.1
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setQuickAmount(0.5)}
+      className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+    >
+      0.5
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setQuickAmount(1)}
+      className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+    >
+      1.0
+    </button>
+
+    <button
+      type="button"
+      onClick={setMaxAmount}
+      className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-300"
+    >
+      Max
+    </button>
+  </div>
+
+  <p className="text-xs text-slate-500">
+    Max leaves room for estimated network fees where applicable.
+  </p>
+</label>
 
         {error ? <p className="text-sm text-rose-400 md:col-span-2">{error}</p> : null}
 
