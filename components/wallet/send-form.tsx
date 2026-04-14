@@ -173,11 +173,20 @@ export function SendForm({ wallets, contacts }: Props) {
   }
 
   if (step === 'confirmation' && draft) {
-    const total = draft.amount + draft.estimatedFee;
-    const hasWarnings = draft.warnings.length > 0;
+  const total = draft.amount + draft.estimatedFee;
+  const hasWarnings = draft.warnings.length > 0;
 
-    return (
-      <div className="card max-w-3xl p-6">
+  return (
+    <div className="max-w-3xl">
+      <div className="mb-4 flex items-center gap-2 text-sm">
+        <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Details</span>
+        <span className="text-slate-500">→</span>
+        <span className="rounded-full bg-emerald-500/20 px-3 py-1 font-semibold text-emerald-300">Confirm</span>
+        <span className="text-slate-500">→</span>
+        <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Done</span>
+      </div>
+
+      <div className="card p-6">
         <h2 className="text-xl font-semibold">Confirm transaction</h2>
         <p className="mt-1 text-sm text-slate-400">Review the details below before signing.</p>
 
@@ -205,7 +214,7 @@ export function SendForm({ wallets, contacts }: Props) {
           <div className="flex justify-between">
             <dt className="text-slate-400">Total cost</dt>
             <dd className="font-semibold">{draft.amount} {draft.assetSymbol} + {formatCurrency(total - draft.amount)}</dd>
-          </div>
+          </div>  
         </dl>
 
         {hasWarnings && (
@@ -247,16 +256,26 @@ export function SendForm({ wallets, contacts }: Props) {
           </button>
         </div>
       </div>
+    </div>  
     );
   }
 
   if (step === 'result' && result) {
-    const shortHash = result.txHash
-      ? `${result.txHash.slice(0, 10)}...${result.txHash.slice(-8)}`
-      : '—';
+  const shortHash = result.txHash
+    ? `${result.txHash.slice(0, 10)}...${result.txHash.slice(-8)}`
+    : '—';
 
-    return (
-      <div className="card max-w-3xl p-6">
+  return (
+    <div className="max-w-3xl">
+      <div className="mb-4 flex items-center gap-2 text-sm">
+        <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Details</span>
+        <span className="text-slate-500">→</span>
+        <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Confirm</span>
+        <span className="text-slate-500">→</span>
+        <span className="rounded-full bg-emerald-500/20 px-3 py-1 font-semibold text-emerald-300">Done</span>
+      </div>
+
+      <div className="card p-6">
         <p className="text-lg font-semibold text-emerald-400">Transaction submitted</p>
         <dl className="mt-4 grid gap-3 text-sm">
           <div className="flex justify-between border-b border-slate-800 pb-3">
@@ -293,12 +312,22 @@ export function SendForm({ wallets, contacts }: Props) {
           </Link>
         </div>
       </div>
+    </div>  
     );
   }
 
   // Step: input
-  return (
-    <div className="card max-w-3xl p-6">
+return (
+  <div className="max-w-3xl">
+    <div className="mb-4 flex items-center gap-2 text-sm">
+      <span className="rounded-full bg-emerald-500/20 px-3 py-1 font-semibold text-emerald-300">Details</span>
+      <span className="text-slate-500">→</span>
+      <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Confirm</span>
+      <span className="text-slate-500">→</span>
+      <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Done</span>
+    </div>
+
+    <div className="card p-6">
       <form className="grid gap-4 md:grid-cols-2" onSubmit={handleInitiate}>
         <label className="grid gap-2 md:col-span-2">
           <span className="text-sm text-slate-300">From wallet</span>
@@ -409,5 +438,6 @@ export function SendForm({ wallets, contacts }: Props) {
         </div>
       </form>
     </div>
+  </div>  
   );
 }
