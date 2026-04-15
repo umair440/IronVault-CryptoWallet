@@ -11,6 +11,7 @@ import {
   WalletCards,
   BookUser,
   GraduationCap,
+  LifeBuoy,
 } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { requireSession, roleLabels } from '@/lib/session';
@@ -24,6 +25,7 @@ const baseItems = [
   { href: '/transactions', label: 'History', icon: History },
   { href: '/contacts', label: 'Contacts', icon: BookUser },
   { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/support', label: 'Support', icon: LifeBuoy },
   // `satisfies` keeps the literal route strings while still enforcing typed-route safety.
 ] satisfies Array<{ href: Route; label: string; icon: typeof Wallet }>;
 

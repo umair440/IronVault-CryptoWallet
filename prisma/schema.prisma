@@ -32,6 +32,13 @@ enum SecretType {
   IMPORTED_PRIVATE_KEY
 }
 
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
 model User {
   id               String        @id @default(auto()) @map("_id") @db.ObjectId
   username         String        @unique
@@ -43,6 +50,7 @@ model User {
   sessions           Session[]
   wallets          Wallet[]
   contacts         Contact[]
+  supportTickets   SupportTicket[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 }
@@ -142,4 +150,15 @@ model Transaction {
   wallet           Wallet            @relation(fields: [walletId], references: [id])
   walletId         String            @db.ObjectId
   createdAt        DateTime          @default(now())
+}
+
+model SupportTicket {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  subject     String
+  message     String
+  status      TicketStatus @default(OPEN)
+  submitter   User         @relation(fields: [submitterId], references: [id], onDelete: Cascade)
+  submitterId String       @db.ObjectId
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
