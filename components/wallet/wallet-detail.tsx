@@ -255,7 +255,7 @@ export function WalletDetail({ wallet }: Props) {
             <h1 className="mt-3 text-2xl font-bold">{wallet.name}</h1>
             {primaryAddress && (
               <div className="mt-2 flex items-center gap-2">
-                <p className="font-mono text-sm text-slate-400">{primaryAddress}</p>
+                <p className="font-mono text-sm text-slate-400">{shortenAddress(primaryAddress)}</p>
                 <button
                   onClick={() => copyAddress(primaryAddress)}
                   className="text-slate-500 transition hover:text-white"
@@ -313,7 +313,7 @@ export function WalletDetail({ wallet }: Props) {
                   const isPositive = change >= 0;
 
                   return (
-                    <tr key={b.id} className="transition hover:bg-slate-900/40">
+                    <tr key={`${b.assetSymbol}-${b.network}`} className="transition hover:bg-slate-900/40">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-bold text-emerald-300">
@@ -410,7 +410,7 @@ export function WalletDetail({ wallet }: Props) {
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
                 <input
                   type="text"
-                  placeholder="Search asset"
+                  placeholder="Search asset (e.g. ETH)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2 pl-8 pr-3 text-sm placeholder-slate-600 focus:border-slate-500 focus:outline-none"
@@ -466,7 +466,6 @@ export function WalletDetail({ wallet }: Props) {
                   }`}
                 >
                   {dir === 'ALL' ? 'All' : dir === 'SEND' ? 'Send' : 'Receive'}
-                  {/* filters for the transaction types */}
                 </button>
               ))}
             </div>
