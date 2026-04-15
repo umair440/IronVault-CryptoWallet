@@ -1,6 +1,7 @@
 import { AppShell } from '@/components/layout/app-shell';
 import { WalletSummary } from '@/components/wallet/wallet-summary';
 import { AssetTable } from '@/components/wallet/asset-table';
+import { PortfolioChart } from '@/components/wallet/portfolio-chart';
 import { SummaryCards } from '@/components/wallet/summary-cards';
 import { TransactionList } from '@/components/wallet/transaction-list';
 import { assets } from '@/lib/mock-data';
@@ -108,6 +109,7 @@ export default async function DashboardPage() {
       </div>
       <WalletSummary wallets={wallets} compact />
       <SummaryCards totalValue={totalValue} totalAssets={assetBalances.length} pendingTransactions={pendingCount} />
+      <PortfolioChart assets={assetBalances} totalValue={totalValue} />
       <AssetTable assets={assetBalances} />
       <TransactionList transactions={transactions} />
     </AppShell>
