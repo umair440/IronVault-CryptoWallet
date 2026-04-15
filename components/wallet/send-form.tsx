@@ -223,7 +223,7 @@ function setMaxAmount() {
   const hasWarnings = draft.warnings.length > 0;
 
   return (
-    <div className="max-w-3xl">
+    <>
       <div className="mb-4 flex items-center gap-2 text-sm">
         <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Details</span>
         <span className="text-slate-500">→</span>
@@ -302,7 +302,7 @@ function setMaxAmount() {
           </button>
         </div>
       </div>
-    </div>  
+    </>
     );
   }
 
@@ -312,7 +312,7 @@ function setMaxAmount() {
     : '—';
 
   return (
-    <div className="max-w-3xl">
+    <>
       <div className="mb-4 flex items-center gap-2 text-sm">
         <span className="rounded-full bg-slate-800 px-3 py-1 text-slate-400">Details</span>
         <span className="text-slate-500">→</span>
@@ -358,13 +358,13 @@ function setMaxAmount() {
           </Link>
         </div>
       </div>
-    </div>  
+    </>
     );
   }
 
   // Step: input
 return (
-  <div className="max-w-3xl">
+  <>
     <div className="mb-4 flex items-center gap-2 text-sm">
       <span className="rounded-full bg-emerald-500/20 px-3 py-1 font-semibold text-emerald-300">Details</span>
       <span className="text-slate-500">→</span>
@@ -528,6 +528,6 @@ return (
         </div>
       </form>
     </div>
-  </div>  
+  </>
   );
 }

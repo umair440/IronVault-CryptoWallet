@@ -6,8 +6,8 @@ export default async function HomePage() {
   const session = await getSession();
 
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-6 py-10">
-      <nav className="flex items-center justify-between border-b border-slate-800 pb-6">
+    <main className="mx-auto min-h-screen w-full max-w-7xl px-6 py-8">
+      <nav className="flex items-center justify-between border-b border-slate-800 pb-8">
         <div>
           {session ? (
             <Link
@@ -50,7 +50,7 @@ export default async function HomePage() {
           )}
         </div>
       </nav>
-      <section className="flex min-h-[calc(100vh-140px)] items-center">
+      <section className="flex min-h-[calc(100vh-140px)] flex-col items-center justify-center">
         <div className="max-w-3xl">
           <p className={`text-5xl uppercase tracking-[0.2em] text-emerald-300 md:text-7xl`}>IronVault</p>
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">A beginner friendly crypto wallet.</h1>

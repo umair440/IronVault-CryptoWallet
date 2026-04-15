@@ -6,6 +6,11 @@
   color-scheme: dark;
 }
 
+html {
+  /* Avoid layout shift when vertical scrollbar appears between pages. */
+  scrollbar-gutter: stable;
+}
+
 body {
   @apply bg-slate-950 text-slate-100 antialiased;
 }

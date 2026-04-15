@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/layout/sidebar';
+import { AppShell } from '@/components/layout/app-shell';
 import { ContactManager } from '@/components/wallet/contact-manager';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
@@ -20,15 +20,13 @@ export default async function ContactsPage() {
   }));
 
   return (
-    <main className="mx-auto grid min-h-screen max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[256px_1fr]">
-      <Sidebar />
-      <section className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Address book</h1>
-          <p className="mt-2 text-slate-400">Save frequently used addresses with a contact name.</p>
-        </div>
-        <ContactManager contacts={contacts} />
-      </section>
-    </main>
+    <AppShell>
+      <div>
+        <span className="badge">Contacts</span>
+        <h1 className="mt-3 text-3xl font-bold">Address book</h1>
+        <p className="mt-2 text-slate-400">Save frequently used addresses with a contact name.</p>
+      </div>
+      <ContactManager contacts={contacts} />
+    </AppShell>
   );
 }
