@@ -62,6 +62,45 @@ export const beginnerSections: LearningSection[] = [
       'On **Done**, you will see **Transaction submitted** with a **transaction hash** and status. Use **Send another** to start over, or **View history** to open **History** in the app. You can also open **Manage address book** from the bottom of the details form to edit **Contacts**.',
     ],
   },
+  {
+    id: 'receive',
+    navLabel: 'Receive',
+    title: 'Receive',
+    summary:
+      'Receive crypto shows each wallet’s main deposit address as text and as a QR code so someone else can send you funds on the right network.',
+    steps: [
+      'In the **left sidebar**, click **Receive** (incoming arrow icon). The page title is **Receive crypto**, with a short note that you can share your address or QR with the sender.',
+      'If you already have wallets, each one appears in its own block inside the card: **wallet name**, **network**, then a **QR code** and the **Main wallet address** in monospace. Click **Copy address** so you do not mistype it when sharing.',
+      'Tell anyone sending to you to use the **same network** as shown on that card (for example Ethereum Sepolia). Sending on the wrong network can mean lost funds in real life — in this prototype always stay on testnets.',
+      'If you have no wallets yet, you will see **Create a wallet from the dashboard before receiving funds.** Add a wallet under **Wallets**, then open **Receive** again.',
+    ],
+  },
+  {
+    id: 'history',
+    navLabel: 'History',
+    title: 'History',
+    summary:
+      'History lists your recent sends and receives across all wallets in one place, newest first, so you can audit amounts, fees, and status.',
+    steps: [
+      'In the **left sidebar**, click **History** (clock/history icon). The heading on the page is **Transaction history**, with text that everything is **most recent first**.',
+      'If there are no rows yet, you will see **No transactions yet. Send crypto to see your history here.** — complete a send (or receive flow in your tests) and refresh if needed.',
+      'When data exists, a card titled **Recent transactions** lists each item: an icon shows **send** vs **receive**, the line shows the **asset** (for example send ETH), **network** and **date/time**, and **To** / **From** with a shortened address when available.',
+      'On the right of each row you see **amount**, **Fee** (formatted), and a **status** pill (for example submitted, pending, or failed styling). Use this screen after sending to confirm what the app recorded.',
+    ],
+  },
+  {
+    id: 'contacts',
+    navLabel: 'Contacts',
+    title: 'Contacts',
+    summary:
+      'Contacts is your address book: save a friendly name with each crypto address so Send can fill the recipient for you and you make fewer paste mistakes.',
+    steps: [
+      'In the **left sidebar**, click **Contacts** (address-book icon). The page title is **Address book**, with a note about saving frequently used addresses with a **contact name**.',
+      'Under **Add contact**, enter a **Name** (for example who you pay) and their wallet **Address** (`0x…`). Click **Save contact** — the list updates when the server accepts it.',
+      'Under **Saved contacts**, each row shows the **name**, full **address**, and a **Remove** link if you no longer need that entry. An empty book shows **No contacts saved yet.**',
+      'On **Send**, the optional **Select from contacts** dropdown and the **Manage address book** link both point back here — keep this list accurate before you rely on it for real transfers.',
+    ],
+  },
 ];
 
 export function showBeginnerLearning(role: UserRole): boolean {
