@@ -10,12 +10,14 @@ const TICK_MS = 1_000;
 
 /**
  * Clears the session after no user activity for {@link IDLE_MS}.
+ * Only **clicks** on the page reset the idle timer (not scroll, mouse move, or keys).
  * Mounted from AppShell on authenticated app routes.
  */
 export function IdleAutoLogout() {
   const router = useRouter();
   const lastActivityRef = useRef(Date.now());
   const loggingOutRef = useRef(false);
+  const warningActiveRef = useRef(false);
   const staySignedInRef = useRef<() => void>(() => {});
   const [remainingMs, setRemainingMs] = useState(IDLE_MS);
 
@@ -27,32 +29,14 @@ export function IdleAutoLogout() {
 
     staySignedInRef.current = markActivity;
 
-    let throttleTimer: ReturnType<typeof setTimeout> | null = null;
-    function markActivityThrottled() {
-      if (throttleTimer !== null) {
+    function handleDocumentClick() {
+      if (warningActiveRef.current) {
         return;
       }
-      throttleTimer = setTimeout(() => {
-        throttleTimer = null;
-        markActivity();
-      }, 1000);
+      markActivity();
     }
 
-    const events: Array<{ name: keyof WindowEventMap; useThrottle: boolean }> = [
-      { name: 'mousedown', useThrottle: false },
-      { name: 'mousemove', useThrottle: true },
-      { name: 'keydown', useThrottle: false },
-      { name: 'scroll', useThrottle: false },
-      { name: 'touchstart', useThrottle: false },
-      { name: 'click', useThrottle: false },
-      { name: 'wheel', useThrottle: false },
-      { name: 'focus', useThrottle: false },
-    ];
-
-    for (const { name, useThrottle } of events) {
-      const handler = useThrottle ? markActivityThrottled : markActivity;
-      window.addEventListener(name, handler as EventListener, { passive: true });
-    }
+    document.addEventListener('click', handleDocumentClick, { capture: true });
 
     const interval = setInterval(() => {
       if (loggingOutRef.current) {
@@ -88,17 +72,14 @@ export function IdleAutoLogout() {
 
     return () => {
       clearInterval(interval);
-      if (throttleTimer !== null) {
-        clearTimeout(throttleTimer);
-      }
-      for (const { name, useThrottle } of events) {
-        const handler = useThrottle ? markActivityThrottled : markActivity;
-        window.removeEventListener(name, handler as EventListener);
-      }
+      document.removeEventListener('click', handleDocumentClick, { capture: true });
     };
   }, [router]);
 
-  if (remainingMs === IDLE_MS) {
+  const warningVisible = remainingMs !== IDLE_MS;
+  warningActiveRef.current = warningVisible;
+
+  if (!warningVisible) {
     return null;
   }
 
@@ -111,7 +92,7 @@ export function IdleAutoLogout() {
     <div
       role="status"
       aria-live="polite"
-      className="pointer-events-none fixed left-1/2 top-4 z-50 -translate-x-1/2"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/40 pt-4"
     >
       <div className="pointer-events-auto flex max-w-[min(100vw-2rem,40rem)] flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-full border border-red-400/45 bg-red-950/90 px-4 py-2.5 text-center text-sm text-red-50 shadow-[0_8px_30px_rgba(127,29,29,0.35)] backdrop-blur-md sm:px-5">
         <span className="font-medium text-red-200/95">
