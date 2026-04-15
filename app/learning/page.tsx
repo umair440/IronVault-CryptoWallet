@@ -1,8 +1,18 @@
 import { AppShell } from '@/components/layout/app-shell';
-import { requireSession } from '@/lib/session';
+import { beginnerSections, showBeginnerLearning } from '@/lib/learning-guide';
+import { requireSession, roleLabels } from '@/lib/session';
+import { BeginnerLearningWalkthrough, NonBeginnerLearningNotice } from './learning-content';
 
 export default async function LearningPage() {
-  await requireSession();
+  const session = await requireSession();
 
-  return <AppShell>{null}</AppShell>;
+  return (
+    <AppShell>
+      {showBeginnerLearning(session.user.role) ? (
+        <BeginnerLearningWalkthrough sections={beginnerSections} />
+      ) : (
+        <NonBeginnerLearningNotice roleLabel={roleLabels[session.user.role]} />
+      )}
+    </AppShell>
+  );
 }
