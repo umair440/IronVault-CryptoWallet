@@ -6,8 +6,9 @@ import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 import type { WalletOption, Contact } from '@/types';
 
-export default async function CoinPage({ params }: { params: { id: string } }) {
-  const coin = cryptoCatalog.find((c) => c.id === params.id);
+export default async function CoinPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const coin = cryptoCatalog.find((c) => c.id === id);
   if (!coin) notFound();
 
   const session = await requireSession();
