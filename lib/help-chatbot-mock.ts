@@ -45,8 +45,12 @@ export function mockAssistantReply(userText: string): string {
     return '**Settings** is where account-level options live in this prototype. For wallet-specific actions, use the Wallets section instead.';
   }
 
-  if (/(hello|hi|hey|thanks|thank you)/.test(t)) {
-    return 'Happy to help. Ask about **send**, **receive**, **wallets**, **history**, or anything confusing on screen — I will point you to the right area.';
+  if (/(hello|hi|hey)/.test(t)) {
+    return 'Hello! What would you like help with, please? You can ask about **send**, **receive**, **wallets**, **history**, the **dashboard**, or anything on screen that is confusing.';
+  }
+
+  if (/(thanks|thank you)/.test(t)) {
+    return 'You are welcome! If anything else is unclear, ask anytime.';
   }
 
   return 'I am **IronVault AI** in this sidebar — a **prototype** (not a connected model). I match simple keywords about Send, Receive, Wallets, History, Contacts, and Settings. For anything else, describe what you see on the page and I will suggest the closest screen to open.';

@@ -11,7 +11,7 @@ const introMessage: ChatMessage = {
   id: 'intro',
   role: 'assistant',
   content:
-    'Hi — I am **IronVault AI** (keyword rules only — **not** a connected LLM). Ask about send, receive, wallets, history, or the dashboard.',
+    'Hello! What would you like help with, please? I am **IronVault AI** (keyword rules only — **not** a connected LLM); try send, receive, wallets, history, or the dashboard.',
 };
 
 function nextId() {
