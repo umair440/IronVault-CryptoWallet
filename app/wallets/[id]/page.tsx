@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Sidebar } from '@/components/layout/sidebar';
+import { AppShell } from '@/components/layout/app-shell';
 import { WalletDetail } from '@/components/wallet/wallet-detail';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
@@ -52,9 +52,8 @@ export default async function WalletDetailPage({ params }: { params: Promise<{ i
   };
 
   return (
-    <main className="mx-auto grid min-h-screen max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[256px_1fr]">
-      <Sidebar />
+    <AppShell>
       <WalletDetail wallet={data} />
-    </main>
+    </AppShell>
   );
 }

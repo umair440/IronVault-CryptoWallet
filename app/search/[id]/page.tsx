@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Sidebar } from '@/components/layout/sidebar';
+import { AppShell } from '@/components/layout/app-shell';
 import { CoinDetail } from '@/components/search/coin-detail';
 import { cryptoCatalog } from '@/lib/crypto-catalog';
 import { prisma } from '@/lib/prisma';
@@ -49,9 +49,8 @@ export default async function CoinPage({ params }: { params: { id: string } }) {
   }));
 
   return (
-    <main className="mx-auto grid min-h-screen max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[256px_1fr]">
-      <Sidebar />
+    <AppShell>
       <CoinDetail coin={coin} wallets={walletOptions} contacts={contacts} />
-    </main>
+    </AppShell>
   );
 }
