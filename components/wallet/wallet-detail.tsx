@@ -466,6 +466,7 @@ export function WalletDetail({ wallet }: Props) {
                   }`}
                 >
                   {dir === 'ALL' ? 'All' : dir === 'SEND' ? 'Send' : 'Receive'}
+                  {/* filters for the transaction types */}
                 </button>
               ))}
             </div>
