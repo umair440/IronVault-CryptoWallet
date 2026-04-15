@@ -157,6 +157,17 @@ export function WalletManager({ wallets }: WalletManagerProps) {
     const hasValidCreatePassphraseLength =
         createFormData.passphrase.length >= 14;
 
+    const hasValidImportBackupPasswordLength =
+        importBackupFormData.backupPassword.length >= 14;
+
+    const hasValidImportBackupPassphraseLength =
+        importBackupFormData.walletPassphrase.length >= 14;
+
+    const hasImportBackupJson =
+        importBackupFormData.backupJson.trim().length > 0;
+
+
+
     useEffect(() => {
         if (!selectedWalletId && wallets[0]?.id) {
             setSelectedWalletId(wallets[0].id);
@@ -756,6 +767,15 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                                     minLength={14}
                                     required
                                 />
+                                <p className="text-xs text-slate-500">
+                                    Enter the password used when the encrypted backup was created.
+                                </p>
+                                {importBackupFormData.backupPassword.length > 0 &&
+                                    !hasValidImportBackupPasswordLength ? (
+                                    <p className="text-xs text-rose-400">
+                                        Backup password must be at least 14 characters.
+                                    </p>
+                                ) : null}
                             </label>
 
                             <label className="grid gap-2">
@@ -774,6 +794,15 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                                     minLength={14}
                                     required
                                 />
+                                <p className="text-xs text-slate-500">
+                                    Use at least 14 characters to secure the restored wallet.
+                                </p>
+                                {importBackupFormData.walletPassphrase.length > 0 &&
+                                    !hasValidImportBackupPassphraseLength ? (
+                                    <p className="text-xs text-rose-400">
+                                        New wallet passphrase must be at least 14 characters.
+                                    </p>
+                                ) : null}
                             </label>
 
                             <label className="grid gap-2">
@@ -790,6 +819,16 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                                     placeholder="Paste the exported backup JSON here"
                                     required
                                 />
+                                <p className="text-xs text-slate-500">
+                                    Paste the full exported encrypted backup JSON exactly as provided.
+                                </p>
+                                {!hasImportBackupJson ? (
+                                    <p className="text-xs text-rose-400">Backup JSON is required.</p>
+                                ) : null}
+
+                                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300">
+                                    ⚠ Keep backup files and passwords secure. Anyone with both may be able to restore your wallet.
+                                </div>
                             </label>
 
                             {importBackupError ? (
@@ -802,7 +841,12 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                             <button
                                 type="submit"
                                 className="rounded-xl bg-emerald-500 px-4 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-70"
-                                disabled={importBackupSubmitting}
+                                disabled={
+                                    importBackupSubmitting ||
+                                    !hasValidImportBackupPasswordLength ||
+                                    !hasValidImportBackupPassphraseLength ||
+                                    !hasImportBackupJson
+                                }
                             >
                                 {importBackupSubmitting ? 'Importing backup...' : 'Import backup'}
                             </button>
