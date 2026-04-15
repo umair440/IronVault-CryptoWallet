@@ -1,11 +1,14 @@
-import { Sidebar } from '@/components/layout/sidebar';
+import { AppShell } from '@/components/layout/app-shell';
 import { WalletSummary } from '@/components/wallet/wallet-summary';
 import { AssetTable } from '@/components/wallet/asset-table';
+import { PortfolioChart } from '@/components/wallet/portfolio-chart';
+import { StuckTransactionAlert } from '@/components/wallet/stuck-transaction-alert';
 import { SummaryCards } from '@/components/wallet/summary-cards';
 import { TransactionList } from '@/components/wallet/transaction-list';
 import { assets } from '@/lib/mock-data';
 import { prisma } from '@/lib/prisma';
 import { requireSession, roleLabels } from '@/lib/session';
+import { STUCK_TRANSACTION_THRESHOLD_MS } from '@/lib/utils';
 import type { AssetBalance, TransactionRecord } from '@/types';
 
 const dashboardCopy = {
@@ -38,7 +41,9 @@ const ASSET_NAMES: Record<string, string> = Object.fromEntries(
 export default async function DashboardPage() {
   const session = await requireSession();
 
-  const [wallets, balanceRows, recentTxRows, pendingCount] = await Promise.all([
+  const stuckCutoff = new Date(Date.now() - STUCK_TRANSACTION_THRESHOLD_MS);
+
+  const [wallets, balanceRows, recentTxRows, pendingCount, stuckCount] = await Promise.all([
     prisma.wallet.findMany({
       where: { ownerId: session.user.id },
       include: { addresses: { orderBy: { createdAt: 'asc' } } },
@@ -54,6 +59,13 @@ export default async function DashboardPage() {
     }),
     prisma.transaction.count({
       where: { wallet: { ownerId: session.user.id }, status: 'PENDING' },
+    }),
+    prisma.transaction.count({
+      where: {
+        wallet: { ownerId: session.user.id },
+        status: 'PENDING',
+        createdAt: { lt: stuckCutoff },
+      },
     }),
   ]);
 
@@ -97,22 +109,21 @@ export default async function DashboardPage() {
   const currentRoleCopy = dashboardCopy[session.user.role];
 
   return (
-    <main className="mx-auto grid min-h-screen max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[256px_1fr]">
-      <Sidebar />
-      <section className="space-y-6">
-        <div>
-          <span className="badge">{currentRoleCopy.badge}</span>
-          <h1 className="mt-3 text-3xl font-bold">Portfolio dashboard</h1>
-          <p className="mt-2 text-slate-400">{currentRoleCopy.description}</p>
-          <p className="mt-3 text-sm text-slate-500">
-            Logged in as {session.user.username} ({roleLabels[session.user.role]}).
-          </p>
-        </div>
-        <WalletSummary wallets={wallets} compact />
-        <SummaryCards totalValue={totalValue} totalAssets={assetBalances.length} pendingTransactions={pendingCount} />
-        <AssetTable assets={assetBalances} />
-        <TransactionList transactions={transactions} />
-      </section>
-    </main>
+    <AppShell>
+      <div>
+        <span className="badge">{currentRoleCopy.badge}</span>
+        <h1 className="mt-3 text-3xl font-bold">Portfolio dashboard</h1>
+        <p className="mt-2 text-slate-400">{currentRoleCopy.description}</p>
+        <p className="mt-3 text-sm text-slate-500">
+          Logged in as {session.user.username} ({roleLabels[session.user.role]}).
+        </p>
+      </div>
+      <WalletSummary wallets={wallets} compact />
+      <StuckTransactionAlert stuckCount={stuckCount} />
+      <SummaryCards totalValue={totalValue} totalAssets={assetBalances.length} pendingTransactions={pendingCount} />
+      <PortfolioChart assets={assetBalances} totalValue={totalValue} />
+      <AssetTable assets={assetBalances} />
+      <TransactionList transactions={transactions} />
+    </AppShell>
   );
 }

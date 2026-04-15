@@ -103,7 +103,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md items-center px-6 py-16">
+    <main className="mx-auto flex min-h-screen max-w-md flex-1 flex-col justify-center px-6 py-8">
       <div className="card w-full p-6">
         <h1 className="text-2xl font-bold">Create account</h1>
         <p className="mt-2 text-sm text-slate-400">Register a new IronVault account to get started.</p>

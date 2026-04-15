@@ -42,3 +42,13 @@ Base Sepolia Wallet:
   - username: Harveyb
   - email: Harvey@gmail.com
   - pass: Benisgay111
+
+Beginner Wallet address:
+0x9Bf2A3b0e487C8Dc1A7c8319143454B2e04f11Af
+
+
+// Account for testing changing a username in settings
+// Changing the password also works
+MyNameIsDifferent (Experienced trader)
+123@super.com
+12345678
