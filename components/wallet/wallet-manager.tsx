@@ -154,6 +154,9 @@ export function WalletManager({ wallets }: WalletManagerProps) {
     const hasValidRecoveryPhraseLength =
         recoveryWordCount === 12 || recoveryWordCount === 24;
 
+    const hasValidCreatePassphraseLength =
+        createFormData.passphrase.length >= 14;
+
     useEffect(() => {
         if (!selectedWalletId && wallets[0]?.id) {
             setSelectedWalletId(wallets[0].id);
@@ -464,6 +467,14 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                                     minLength={14}
                                     required
                                 />
+                                <p className="text-xs text-slate-500">
+                                    Use at least 14 characters to protect this wallet.
+                                </p>
+                                {createFormData.passphrase.length > 0 && !hasValidCreatePassphraseLength ? (
+                                    <p className="text-xs text-rose-400">
+                                        Passphrase must be at least 14 characters.
+                                    </p>
+                                ) : null}
                             </label>
 
                             {createError ? <p className="text-sm text-rose-400">{createError}</p> : null}
@@ -477,13 +488,16 @@ export function WalletManager({ wallets }: WalletManagerProps) {
                                     <p className="mt-2 font-mono text-sm text-amber-100">
                                         {createRecoveryPhrase}
                                     </p>
+                                    <p className="mt-3 text-xs text-amber-200">
+                                        Store this phrase securely. It may not be shown again and anyone with access can control your wallet.
+                                    </p>
                                 </div>
                             ) : null}
 
                             <button
                                 type="submit"
                                 className="rounded-xl bg-emerald-500 px-4 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-70"
-                                disabled={createSubmitting}
+                                disabled={createSubmitting || !hasValidCreatePassphraseLength}
                             >
                                 {createSubmitting ? 'Creating wallet...' : 'Create wallet'}
                             </button>
