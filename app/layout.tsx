@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { MockHelpChatbot } from '@/components/help/mock-help-chatbot';
+import { ConditionalHelpChatbot } from '@/components/help/conditional-help-chatbot';
 
 export const metadata: Metadata = {
   title: 'IronVault',
@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="flex min-h-screen">
         <div className="flex min-h-screen min-w-0 flex-1 flex-col">{children}</div>
-        <MockHelpChatbot />
+        <ConditionalHelpChatbot />
       </body>
     </html>
   );
