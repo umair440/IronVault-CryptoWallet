@@ -49,5 +49,5 @@ export function mockAssistantReply(userText: string): string {
     return 'Happy to help. Ask about **send**, **receive**, **wallets**, **history**, or anything confusing on screen — I will point you to the right area.';
   }
 
-  return 'I am a **mock assistant** (no live AI). I match simple keywords about Send, Receive, Wallets, History, Contacts, and Settings. For anything else, describe what you see on the page and I will suggest the closest screen to open.';
+  return 'I am **IronVault AI** in this sidebar — a **prototype** (not a connected model). I match simple keywords about Send, Receive, Wallets, History, Contacts, and Settings. For anything else, describe what you see on the page and I will suggest the closest screen to open.';
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, MessageCircle, SendHorizonal, Sparkles } from 'lucide-react';
+import { Bot, ChevronLeft, ChevronRight, SendHorizonal, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockAssistantReply, type ChatMessage } from '@/lib/help-chatbot-mock';
 
@@ -9,7 +9,7 @@ const introMessage: ChatMessage = {
   id: 'intro',
   role: 'assistant',
   content:
-    'Hi — I am a **demo helper** for IronVault (mock replies, not a real AI). Ask how to send, receive, manage wallets, or read your dashboard.',
+    'Hi — I am **IronVault AI** (keyword rules only — **not** a connected LLM). Ask about send, receive, wallets, history, or the dashboard.',
 };
 
 function nextId() {
@@ -73,23 +73,26 @@ export function MockHelpChatbot() {
   if (!expanded) {
     return (
       <aside
-        className="sticky top-0 flex h-screen w-12 shrink-0 flex-col self-start border-l border-slate-800 bg-slate-900"
-        aria-label="Help chat (collapsed)"
+        className="sticky top-0 flex h-screen w-12 shrink-0 flex-col self-start border-l-2 border-l-violet-500/50 border-slate-800 bg-gradient-to-b from-violet-950/35 to-slate-900"
+        aria-label="IronVault AI (prototype, collapsed)"
       >
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="flex flex-1 flex-col items-center gap-3 border-b border-slate-800 py-4 text-slate-400 transition hover:bg-slate-800/80 hover:text-emerald-300"
+          className="flex flex-1 flex-col items-center gap-2 border-b border-slate-800 py-3 text-slate-400 transition hover:bg-violet-950/40 hover:text-violet-200"
           aria-expanded={false}
           aria-controls={panelId}
-          title="Open help"
+          title="Open IronVault AI (prototype)"
         >
-          <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
+          <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/20 text-violet-200">
+            <Bot className="h-4 w-4" aria-hidden />
+            <Sparkles className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 text-amber-300/90" aria-hidden />
+          </span>
           <span
-            className="select-none text-[10px] font-semibold uppercase tracking-widest text-slate-500 [writing-mode:vertical-rl] rotate-180"
+            className="select-none text-[10px] font-bold uppercase tracking-[0.12em] text-violet-300/90 [writing-mode:vertical-rl] rotate-180"
             aria-hidden
           >
-            Help
+            AI
           </span>
           <ChevronLeft className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
         </button>
@@ -101,31 +104,42 @@ export function MockHelpChatbot() {
     <aside
       id={panelId}
       className={cn(
-        'sticky top-0 flex h-screen w-[min(22rem,calc(100vw-9rem))] shrink-0 flex-col self-start border-l border-slate-800 bg-slate-900 md:w-96',
+        'sticky top-0 flex h-screen w-[min(22rem,calc(100vw-9rem))] shrink-0 flex-col self-start border-l-2 border-l-violet-500/50 border-slate-800 bg-gradient-to-b from-violet-950/30 via-slate-900 to-slate-900 md:w-96',
       )}
-      aria-label="Help chat (mock)"
+      aria-label="IronVault AI chat (prototype, not a live model)"
     >
-      <header className="flex shrink-0 items-center justify-between border-b border-slate-800 px-3 py-3">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-            <Sparkles className="h-4 w-4" aria-hidden />
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">IronVault helper</p>
-            <p className="truncate text-xs text-slate-500">Mock assistant · not live AI</p>
+      <header className="flex shrink-0 flex-col gap-2 border-b border-slate-800 px-3 py-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/20 text-violet-100 ring-1 ring-violet-400/30">
+              <Bot className="h-5 w-5" aria-hidden />
+              <Sparkles className="absolute -right-1 -top-1 h-3.5 w-3.5 text-amber-300/95" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <p className="truncate text-sm font-semibold text-white">IronVault AI</p>
+                <span className="shrink-0 rounded-md border border-violet-500/40 bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-200">
+                  Prototype
+                </span>
+              </div>
+              <p className="truncate text-xs text-slate-400">Not a real model</p>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={() => setExpanded(false)}
+            className="shrink-0 self-start rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+            aria-expanded={true}
+            aria-controls={panelId}
+            title="Collapse IronVault AI panel"
+            aria-label="Collapse IronVault AI panel"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => setExpanded(false)}
-          className="shrink-0 rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-          aria-expanded={true}
-          aria-controls={panelId}
-          title="Collapse help panel"
-          aria-label="Collapse help panel"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
+        <p className="text-[11px] leading-snug text-slate-500">
+          This sidebar is a <span className="font-medium text-violet-300/90">prototype AI UI</span>.
+        </p>
       </header>
 
       <div
@@ -142,7 +156,7 @@ export function MockHelpChatbot() {
               'max-w-[92%] rounded-2xl px-3 py-2 text-sm leading-relaxed',
               msg.role === 'user'
                 ? 'ml-auto bg-emerald-600/25 text-slate-100'
-                : 'mr-auto border border-slate-800 bg-slate-950/80 text-slate-200',
+                : 'mr-auto border border-violet-500/20 bg-slate-950/90 text-slate-200 ring-1 ring-violet-500/10',
             )}
           >
             <p className="whitespace-pre-wrap">{renderInlineBold(msg.content)}</p>
@@ -162,7 +176,7 @@ export function MockHelpChatbot() {
         ) : null}
       </div>
 
-      <footer className="shrink-0 border-t border-slate-800 p-3">
+      <footer className="shrink-0 space-y-2 border-t border-slate-800 p-3">
         <div className="flex gap-2">
           <input
             type="text"
@@ -174,20 +188,21 @@ export function MockHelpChatbot() {
                 send();
               }
             }}
-            placeholder="Ask anything…"
-            className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
-            aria-label="Message to mock assistant"
+            placeholder="Ask IronVault AI…"
+            className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+            aria-label="Message to IronVault AI"
           />
           <button
             type="button"
             onClick={send}
             disabled={!input.trim() || thinking}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Send message"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500 text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Send message to IronVault AI"
           >
             <SendHorizonal className="h-4 w-4" />
           </button>
         </div>
+        <p className="text-center text-[10px] text-slate-600">Prototype · no API keys · no data leaves your session</p>
       </footer>
     </aside>
   );
