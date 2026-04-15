@@ -4,11 +4,11 @@ import { WalletDetail } from '@/components/wallet/wallet-detail';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 
-export default async function WalletDetailPage({ params }: { params: { id: string } }) {
-  const session = await requireSession();
+export default async function WalletDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const [session, { id }] = await Promise.all([requireSession(), params]);
 
   const wallet = await prisma.wallet.findFirst({
-    where: { id: params.id, ownerId: session.user.id },
+    where: { id, ownerId: session.user.id },
     include: {
       addresses: { orderBy: { createdAt: 'asc' } },
       balances: true,
